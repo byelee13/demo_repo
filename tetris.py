@@ -93,13 +93,15 @@ class TextRenderer:
 
 
 def rotate_cells(cells):
-    """顺时针旋转方块坐标（以质心近似旋转）。"""
-    cx = sum(x for x, _ in cells) / len(cells)
-    cy = sum(y for _, y in cells) / len(cells)
+    """在包围盒内顺时针旋转 90°，保证格子始终对齐。"""
+    min_x = min(x for x, _ in cells)
+    min_y = min(y for _, y in cells)
+    max_x = max(x for x, _ in cells)
     rotated = []
     for x, y in cells:
-        rx = round(cx + (y - cy))
-        ry = round(cy - (x - cx))
+        nx, ny = x - min_x, y - min_y
+        rx = ny + min_x
+        ry = (max_x - min_x) - nx + min_y
         rotated.append((rx, ry))
     return rotated
 
